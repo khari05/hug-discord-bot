@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "ES6",
+    "noImplicitAny": false,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "watch": false,
+    "outDir": "dist",
+    "moduleResolution": "Node",
+    "strictNullChecks": true,
+    "downlevelIteration": true
+  },
+  "include": ["src/*.ts"],
+  "exclude": ["node_modules"],
+}

@@ -1,0 +1,11 @@
+version: "3"
+services:
+  bot:
+    build: .
+    env_file:
+      - ./.env
+    volumes:
+      - .:/app
+      - /app/dist
+      - /app/node_modules
+    restart: unless-stopped
