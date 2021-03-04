@@ -10,6 +10,8 @@ const commandRegex: RegExp = new RegExp(`^${prefix}.*`)
 
 client.on('ready', () => {
   console.log(`successfully logged in as ${client?.user?.tag ?? 'error'}`)
+  client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
+    .catch((e: Error) => console.error(e.stack))
   setCommands()
   fillLinkMap()
 })

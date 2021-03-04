@@ -1,6 +1,7 @@
 import { Message, MessageEmbed, User } from 'discord.js'
 import { Command, commandMap } from '../command.js'
 import { prefix } from '../index.js'
+import { disabled } from '../disabled.js'
 
 export const helpCommand: Command = {
   name: 'help',
@@ -27,5 +28,9 @@ function helpMenuEmbed (author: User): MessageEmbed {
 }
 
 async function help (cmd: string, msg: Message): Promise<void> {
-  await msg.channel.send(helpMenuEmbed(msg.author))
+  if (disabled.includes(msg.channel.id)) {
+    await msg.channel.send('Sorry, that command is disabled in this channel.')
+  } else {
+    await msg.channel.send(helpMenuEmbed(msg.author))
+  }
 }

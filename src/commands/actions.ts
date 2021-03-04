@@ -1,6 +1,7 @@
 import { Message } from 'discord.js'
 import axios from 'axios'
 import { Command } from '../command.js'
+import { disabled } from '../disabled.js'
 
 const tenorApiKey: string | undefined = process.env.TENOR_KEY
 
@@ -24,16 +25,18 @@ async function action (cmd: string, msg: Message): Promise<void> {
   const phrase = wordMap.get(cmd)
   const links = linkMap.get(cmd)
 
-  if (msg.mentions.users.size === 1 && phrase !== undefined && links !== undefined) {
-    await msg.channel.send({
-      content: phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
-      files: [{
-        attachment: links[Math.floor(Math.random() * links.length - 1)],
-        name: 'tenor.gif'
-      }]
-    })
+  if (disabled.includes(msg.channel.id)) {
+    await msg.channel.send('Sorry, that command is disabled in this channel.')
   } else {
-    await msg.channel.send
+    if (msg.mentions.users.size === 1 && phrase !== undefined && links !== undefined) {
+      await msg.channel.send({
+        content: phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
+        files: [{
+          attachment: links[Math.floor(Math.random() * links.length - 1)],
+          name: 'tenor.gif'
+        }]
+      })
+    }
   }
 }
 
@@ -53,7 +56,7 @@ export function fillLinkMap (): void {
       instance.get('/search', {
         params: {
           q: q,
-          limit: 10
+          limit: 15
         }
       })
         .then((response) => linkMap.set(e, response.data.results.map((a: any) => a.media[0].mediumgif.url)))
