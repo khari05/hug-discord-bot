@@ -16,6 +16,16 @@ client.on('ready', () => {
   fillLinkMap()
 })
 
+client.on('guildCreate', (guild) => {
+  client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
+    .catch((e: Error) => console.error(e.stack))
+})
+
+client.on('guildDelete', (guild) => {
+  client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
+    .catch((e: Error) => console.error(e.stack))
+})
+
 client.on('message', (msg: Message) => {
   if (msg.content.search(commandRegex) !== -1) {
     matchCommand(msg).catch((e: Error) => console.error(e.stack))
