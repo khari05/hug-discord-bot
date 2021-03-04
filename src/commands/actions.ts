@@ -1,4 +1,4 @@
-import { Message } from 'discord.js'
+import { DMChannel, Message, NewsChannel, TextChannel } from 'discord.js'
 import axios from 'axios'
 import { Command } from '../command.js'
 import { disabled } from '../disabled.js'
@@ -29,23 +29,39 @@ async function action (cmd: string, msg: Message): Promise<void> {
     await msg.channel.send('Sorry, that command is disabled in this channel.')
   } else {
     if (msg.mentions.users.size === 1 && phrase !== undefined && links !== undefined) {
-      await msg.channel.send({
-        content: phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
-        files: [{
-          attachment: links[Math.floor(Math.random() * links.length - 1)],
-          name: 'tenor.gif'
-        }]
-      })
+      if (msg.author.id !== msg.mentions.users.first()?.id) {
+        await sendGif(
+          phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
+          msg.channel,
+          links[Math.floor(Math.random() * links.length - 1)]
+        )
+      } else {
+        await sendGif(
+          phrase(`<@${msg.author.id}>`, 'themself'),
+          msg.channel,
+          links[Math.floor(Math.random() * links.length - 1)]
+        )
+      }
     }
   }
 }
 
+async function sendGif (msg: string, channel: TextChannel | DMChannel | NewsChannel, link: string): Promise<void> {
+  await channel.send({
+    content: msg,
+    files: [{
+      attachment: link,
+      name: 'tenor.gif'
+    }]
+  })
+}
+
 const wordMap: Map<string, (a: string, b: string) => string> = new Map([
-  ['hug', (a, b) => `${a} ***hugs*** ${b}`],
-  ['kiss', (a, b) => `${a} ***kisses*** ${b}`],
-  ['headpat', (a, b) => `${a} ***pats*** ${b}`],
-  ['cuddle', (a, b) => `${a} ***cuddles*** ${b}`],
-  ['holdhands', (a, b) => `${a} ***holds hands with*** ${b}`]
+  ['hug', (a, b) => `***${a} hugs ${b}***`],
+  ['kiss', (a, b) => `***${a} kisses ${b}***`],
+  ['headpat', (a, b) => `***${a} pats ${b}***`],
+  ['cuddle', (a, b) => `***${a} cuddles ${b}***`],
+  ['holdhands', (a, b) => `***${a} holds hands with ${b}***`]
 ])
 
 const linkMap: Map<string, string[]> = new Map()
