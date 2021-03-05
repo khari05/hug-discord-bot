@@ -29,23 +29,22 @@ async function action (cmd: string, msg: Message): Promise<void> {
     await msg.channel.send('Sorry, that command is disabled in this channel.')
   } else {
     if (phrase !== undefined && links !== undefined) {
-      if (msg.mentions.users.size === 1) {
-        if (msg.author.id !== msg.mentions.users.first()?.id) {
-          await sendGif(
-            phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
-            msg.channel,
-            links[Math.floor(Math.random() * links.length - 1)]
-          )
+      let person2: string = ''
+
+      const mention = msg.content.match(/<@!?(\d+)>.?$/)
+      if (mention !== null && mention.length === 2) {
+        if (msg.author.id !== mention[1]) {
+          person2 = `<@${mention[1]}>`
         } else {
-          await sendGif(
-            phrase(`<@${msg.author.id}>`, 'themself'),
-            msg.channel,
-            links[Math.floor(Math.random() * links.length - 1)]
-          )
+          person2 = 'themself'
         }
-      } else if (msg.mentions.everyone) {
+      } else if (msg.content.match(/(@everyone|@here).?$)/) !== undefined) {
+        person2 = 'the entire server'
+      }
+
+      if (person2.length !== 0) {
         await sendGif(
-          phrase(`<@${msg.author.id}>`, 'the entire server'),
+          phrase(`<@${msg.author.id}>`, person2),
           msg.channel,
           links[Math.floor(Math.random() * links.length - 1)]
         )
