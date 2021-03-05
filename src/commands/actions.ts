@@ -28,16 +28,24 @@ async function action (cmd: string, msg: Message): Promise<void> {
   if (disabled.includes(msg.channel.id)) {
     await msg.channel.send('Sorry, that command is disabled in this channel.')
   } else {
-    if (msg.mentions.users.size === 1 && phrase !== undefined && links !== undefined) {
-      if (msg.author.id !== msg.mentions.users.first()?.id) {
+    if (phrase !== undefined && links !== undefined) {
+      if (msg.mentions.users.size === 1) {
+        if (msg.author.id !== msg.mentions.users.first()?.id) {
+          await sendGif(
+            phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
+            msg.channel,
+            links[Math.floor(Math.random() * links.length - 1)]
+          )
+        } else {
+          await sendGif(
+            phrase(`<@${msg.author.id}>`, 'themself'),
+            msg.channel,
+            links[Math.floor(Math.random() * links.length - 1)]
+          )
+        }
+      } else if (msg.mentions.everyone) {
         await sendGif(
-          phrase(`<@${msg.author.id}>`, `<@${msg.mentions.users.first()?.id ?? ''}>`),
-          msg.channel,
-          links[Math.floor(Math.random() * links.length - 1)]
-        )
-      } else {
-        await sendGif(
-          phrase(`<@${msg.author.id}>`, 'themself'),
+          phrase(`<@${msg.author.id}>`, 'the entire server'),
           msg.channel,
           links[Math.floor(Math.random() * links.length - 1)]
         )
@@ -72,7 +80,7 @@ export function fillLinkMap (): void {
       instance.get('/search', {
         params: {
           q: q,
-          limit: 15
+          limit: 10
         }
       })
         .then((response) => linkMap.set(e, response.data.results.map((a: any) => a.media[0].mediumgif.url)))
