@@ -46,7 +46,7 @@ async function action (cmd: string, msg: Message): Promise<void> {
         await sendGif(
           phrase(`<@${msg.author.id}>`, person2),
           msg.channel,
-          links[Math.floor(Math.random() * links.length - 1)]
+          links[Math.floor(Math.random() * (links.length - 1))]
         )
       }
     }
@@ -79,7 +79,7 @@ export function fillLinkMap (): void {
       instance.get('/search', {
         params: {
           q: q,
-          limit: 10
+          limit: 20
         }
       })
         .then((response) => linkMap.set(e, response.data.results.map((a: any) => a.media[0].mediumgif.url)))
