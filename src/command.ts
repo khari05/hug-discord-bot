@@ -32,8 +32,6 @@ export function setCommands (): void {
     commandMap.set('help', helpCommand)
     commandMap.set('disablechannel', disableChannelCommand)
     commandMap.set('enablechannel', enableChannelCommand)
-    for (const e of actionMap) {
-      commandMap.set(e[0], e[1])
-    }
+    actionMap.forEach((a, n) => commandMap.set(n, a.command))
   }
 }

@@ -1,6 +1,6 @@
 import { Client, Message } from 'discord.js'
 import { matchCommand, setCommands } from './command.js'
-import { fillLinkMap } from './commands/actions.js'
+import { fillLinks } from './commands/actions.js'
 
 const client: Client = new Client()
 
@@ -13,7 +13,8 @@ client.on('ready', () => {
   client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
     .catch((e: Error) => console.error(e.stack))
   setCommands()
-  fillLinkMap()
+  fillLinks()
+    .catch((e: Error) => console.error(e.stack))
 })
 
 client.on('guildCreate', (guild) => {
