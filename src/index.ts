@@ -29,7 +29,7 @@ client.on('guildDelete', (guild) => {
 
 client.on('message', (msg: Message) => {
   if (msg.content.search(commandRegex) !== -1) {
-    matchCommand(msg).catch((e: Error) => console.error(e.stack))
+    matchCommand(msg, client).catch((e: Error) => console.error(e.stack))
   }
 })
 
