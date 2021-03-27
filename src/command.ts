@@ -5,7 +5,7 @@ import { enableChannelCommand } from './commands/enableChannel.js'
 import { helpCommand } from './commands/help.js'
 import { inviteCommand } from './commands/invite.js'
 
-const commandMatcher: RegExp = /^.([a-z]+)\s+?.*/
+const commandMatcher: RegExp = /^.([a-z]+)\s*?.*/
 
 export interface Command {
   name: string
