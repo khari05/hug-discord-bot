@@ -1,6 +1,7 @@
 import { Client, Message } from 'discord.js'
 import { matchCommand, setCommands } from './command.js'
 import { fillLinks } from './commands/actions/gifs.js'
+import { updatePresence } from './presence.js'
 
 const client: Client = new Client()
 
@@ -10,7 +11,7 @@ const commandRegex: RegExp = new RegExp(`^${prefix}.*`)
 
 client.on('ready', () => {
   console.log(`successfully logged in as ${client?.user?.tag ?? 'error'}`)
-  client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
+  updatePresence(client)
     .catch((e: Error) => console.error(e.stack))
   setCommands()
   fillLinks()
@@ -18,12 +19,12 @@ client.on('ready', () => {
 })
 
 client.on('guildCreate', (guild) => {
-  client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
+  updatePresence(client)
     .catch((e: Error) => console.error(e.stack))
 })
 
 client.on('guildDelete', (guild) => {
-  client.user?.setPresence({ activity: { name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' } })
+  updatePresence(client)
     .catch((e: Error) => console.error(e.stack))
 })
 
