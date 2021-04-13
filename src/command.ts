@@ -1,5 +1,5 @@
 import { Client, Message } from 'discord.js'
-import { actionMap } from './commands/actions.js'
+import { actionMap } from './commands/actions/actions.js'
 import { disableChannelCommand } from './commands/disableChannel.js'
 import { enableChannelCommand } from './commands/enableChannel.js'
 import { helpCommand } from './commands/help.js'

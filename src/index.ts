@@ -1,6 +1,6 @@
 import { Client, Message } from 'discord.js'
 import { matchCommand, setCommands } from './command.js'
-import { fillLinks } from './commands/actions.js'
+import { fillLinks } from './commands/actions/gifs.js'
 
 const client: Client = new Client()
 

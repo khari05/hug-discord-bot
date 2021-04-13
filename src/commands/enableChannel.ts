@@ -1,6 +1,6 @@
 import { Message } from 'discord.js'
 import { Command } from '../command.js'
-import { disabled, removeChannel } from '../disabled.js'
+import { isChannelDisabled, removeChannel } from '../disabled.js'
 
 export const enableChannelCommand: Command = {
   name: 'enablechannel',
@@ -10,7 +10,7 @@ export const enableChannelCommand: Command = {
 
 async function enableChannel (cmd: string, msg: Message): Promise<void> {
   if (msg.member?.hasPermission('MANAGE_CHANNELS') ?? false) {
-    if (disabled.includes(msg.channel.id)) {
+    if (isChannelDisabled(msg.channel.id)) {
       removeChannel(msg.channel.id)
       await msg.channel.send('This channel is now enabled')
     } else {
