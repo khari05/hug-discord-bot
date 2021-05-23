@@ -91,7 +91,7 @@ async function action (cmd: string, msg: Message): Promise<void> {
             person2 = `<@${mentionIds[0]}>`
           } else if (mention.length === 2) {
             person2 = `<@${mentionIds[0]}> and <@${mentionIds[1]}>`
-          } else {
+          } else if (mention.length > 2) {
             person2 = 'multiple people'
           }
         } else if (msg.mentions.users.size === 1) {
