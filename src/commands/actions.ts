@@ -1,13 +1,14 @@
-import { DMChannel, Message, NewsChannel, TextChannel } from 'discord.js'
+import { ApplicationCommandOption, CommandInteraction, Message } from 'discord.js'
 import axios, { AxiosResponse } from 'axios'
 import { Command } from '../command.js'
 import { disabled } from '../disabled.js'
+import { sendGif, sendMessage } from '../send.js'
 
 const tenorApiKey: string | undefined = process.env.TENOR_KEY
 
 const instance = axios.create({
   baseURL: 'https://g.tenor.com/v1',
-  timeout: 10000,
+  timeout: 1000,
   params: {
     key: tenorApiKey
   }
@@ -26,44 +27,46 @@ enum ActionType {
   multiUser
 }
 
+const actionOptions: ApplicationCommandOption[] = [{ name: 'user', description: 'The other person for your action', required: true, type: 'USER' }]
+
 export const actionMap: Map<string, Action> = new Map([
   ['hug', {
-    command: { name: 'hug', description: 'Hug another user', cmd: action },
+    command: { name: 'hug', description: 'Hug another user', options: actionOptions, cmd: action },
     type: ActionType.multiUser,
     phrase: (a, b) => `***${a} hugs ${b}***`,
     searchTerm: 'hug anime',
     links: []
   }],
   ['kiss', {
-    command: { name: 'kiss', description: 'Kiss another user', cmd: action },
+    command: { name: 'kiss', description: 'Kiss another user', options: actionOptions, cmd: action },
     type: ActionType.multiUser,
     phrase: (a, b) => `***${a} kisses ${b}***`,
     searchTerm: 'kiss anime',
     links: []
   }],
   ['headpat', {
-    command: { name: 'headpat', description: 'Pat another user', cmd: action },
+    command: { name: 'headpat', description: 'Pat another user', options: actionOptions, cmd: action },
     type: ActionType.multiUser,
     phrase: (a, b) => `***${a} pats ${b}***`,
     searchTerm: 'head pat anime',
     links: []
   }],
   ['cuddle', {
-    command: { name: 'cuddle', description: 'Cuddle with another user', cmd: action },
+    command: { name: 'cuddle', description: 'Cuddle with another user', options: actionOptions, cmd: action },
     type: ActionType.multiUser,
     phrase: (a, b) => `***${a} cuddles ${b}***`,
     searchTerm: 'snuggle anime',
     links: []
   }],
   ['holdhands', {
-    command: { name: 'holdhands', description: 'Hold hands with another user', cmd: action },
+    command: { name: 'holdhands', description: 'Hold hands with another user', options: actionOptions, cmd: action },
     type: ActionType.multiUser,
     phrase: (a, b) => `***${a} holds hands with ${b}***`,
     searchTerm: 'holding hands anime',
     links: []
   }],
   ['cry', {
-    command: { name: 'cry', description: 'Cry', cmd: action },
+    command: { name: 'cry', description: 'Cry', options: [], cmd: action },
     type: ActionType.singleUser,
     phrase: (a, b) => `***${a} cries***`,
     searchTerm: 'cry anime',
@@ -71,53 +74,47 @@ export const actionMap: Map<string, Action> = new Map([
   }]
 ])
 
-async function action (cmd: string, msg: Message): Promise<void> {
+async function action (cmd: string, msg: Message | CommandInteraction): Promise<void> {
   const action = actionMap.get(cmd)
 
-  if (disabled.includes(msg.channel.id)) {
-    await msg.channel.send('Sorry, that command is disabled in this channel.')
+  if (disabled.includes(msg.channel?.id ?? '')) {
+    await sendMessage(msg, 'Sorry, that command is disabled in this channel.', true)
   } else {
     if (action !== undefined && action.links.length !== 0) {
       let person2: string = 'themself'
 
       if (action.type === ActionType.multiUser) {
-        const mention = msg.content.match(/<@!?\d+>+?/g)
-        if (mention !== null) {
-          const mentionIds: string[] = mention.map((a: string) => {
-            const match = a.match(/\d+/)
-            return match !== null ? match[0] : ''
-          })
-          if (mention.length === 1 && msg.author.id !== mentionIds[0]) {
-            person2 = `<@${mentionIds[0]}>`
-          } else if (mention.length === 2) {
-            person2 = `<@${mentionIds[0]}> and <@${mentionIds[1]}>`
-          } else if (mention.length > 2) {
-            person2 = 'multiple people'
+        if (msg instanceof Message) {
+          const mention = msg.content.match(/<@!?\d+>+?/g)
+          if (mention !== null) {
+            const mentionIds: string[] = mention.map((a: string) => {
+              const match = a.match(/\d+/)
+              return match !== null ? match[0] : ''
+            })
+            if (mention.length === 1 && msg.author.id !== mentionIds[0]) {
+              person2 = `<@${mentionIds[0]}>`
+            } else if (mention.length === 2) {
+              person2 = `<@${mentionIds[0]}> and <@${mentionIds[1]}>`
+            } else if (mention.length > 2) {
+              person2 = 'multiple people'
+            }
+          } else if (msg.mentions.users.size === 1) {
+            person2 = `<@${msg.mentions.users.first()?.id ?? ''}>`
+          } else if (msg.content.match(/^.\w+\s(@everyone|@here)/) !== null) {
+            person2 = 'the entire server'
           }
-        } else if (msg.mentions.users.size === 1) {
-          person2 = `<@${msg.mentions.users.first()?.id ?? ''}>`
-        } else if (msg.content.match(/^.\w+\s(@everyone|@here)/) !== null) {
-          person2 = 'the entire server'
+        } else {
+          person2 = `<@${msg.options.first()?.user?.id ?? ''}>`
         }
       }
 
       await sendGif(
-        action.phrase(`<@${msg.author.id}>`, person2),
-        msg.channel,
+        action.phrase(`<@${msg instanceof CommandInteraction ? msg.user.id : msg.author.id}>`, person2),
+        msg,
         action.links[Math.floor(Math.random() * (action.links.length - 1))]
       )
     }
   }
-}
-
-async function sendGif (msg: string, channel: TextChannel | DMChannel | NewsChannel, link: string): Promise<void> {
-  await channel.send({
-    content: msg,
-    files: [{
-      attachment: link,
-      name: 'tenor.gif'
-    }]
-  })
 }
 
 export async function fillLinks (): Promise<void> {

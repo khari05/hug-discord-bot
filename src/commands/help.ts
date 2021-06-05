@@ -1,21 +1,23 @@
-import { Message, MessageEmbed, User } from 'discord.js'
+import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js'
 import { Command, commandMap } from '../command.js'
 import { prefix } from '../index.js'
 import { disabled } from '../disabled.js'
+import { sendMessage } from '../send.js'
 
 export const helpCommand: Command = {
   name: 'help',
   description: 'Shows the help menu',
+  options: [],
   cmd: help
 }
 
-function helpMenuEmbed (author: User): MessageEmbed {
+function helpMenuEmbed (author: User | null): MessageEmbed {
   const embed = new MessageEmbed({
     title: 'HugBot Help',
     color: '#FF80AB',
     footer: {
-      text: `Requested by ${author.tag}`,
-      icon_url: author.avatarURL() ?? undefined
+      text: `Requested by ${author?.tag ?? ''}`,
+      icon_url: author?.avatarURL() ?? undefined
     },
     timestamp: new Date()
   })
@@ -27,10 +29,10 @@ function helpMenuEmbed (author: User): MessageEmbed {
   return embed
 }
 
-async function help (cmd: string, msg: Message): Promise<void> {
-  if (disabled.includes(msg.channel.id)) {
-    await msg.channel.send('Sorry, that command is disabled in this channel.')
+async function help (cmd: string, msg: Message | CommandInteraction): Promise<void> {
+  if (disabled.includes(msg.channel?.id ?? '')) {
+    await sendMessage(msg, 'Sorry, that command is disabled in this channel.', true)
   } else {
-    await msg.channel.send(helpMenuEmbed(msg.author))
+    await sendMessage(msg, helpMenuEmbed(msg instanceof CommandInteraction ? msg.user : msg.author), true)
   }
 }

@@ -1,22 +1,24 @@
-import { Message } from 'discord.js'
+import { CommandInteraction, GuildMember, Message } from 'discord.js'
 import { Command } from '../command.js'
 import { disabled, removeChannel } from '../disabled.js'
+import { sendMessage } from '../send.js'
 
 export const enableChannelCommand: Command = {
   name: 'enablechannel',
   description: 'Enable gifs in this channel',
+  options: [],
   cmd: enableChannel
 }
 
-async function enableChannel (cmd: string, msg: Message): Promise<void> {
-  if (msg.member?.hasPermission('MANAGE_CHANNELS') ?? false) {
-    if (disabled.includes(msg.channel.id)) {
-      removeChannel(msg.channel.id)
-      await msg.channel.send('This channel is now enabled')
+async function enableChannel (cmd: string, msg: Message | CommandInteraction): Promise<void> {
+  if (msg.member instanceof GuildMember && (msg.member?.permissions.has('MANAGE_CHANNELS') ?? false)) {
+    if (disabled.includes(msg.channel?.id ?? '')) {
+      removeChannel(msg.channel?.id ?? '')
+      await sendMessage(msg, 'This channel is now enabled', true)
     } else {
-      await msg.channel.send('This channel is already enabled')
+      await sendMessage(msg, 'This channel is already enabled', true)
     }
   } else {
-    await msg.channel.send('You don\'t have permission to run that command.')
+    await sendMessage(msg, 'You don\'t have permission to run that command.', true)
   }
 }
