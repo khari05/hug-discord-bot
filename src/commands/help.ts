@@ -1,4 +1,4 @@
-import { CommandInteraction, Message, MessageEmbed, User } from 'discord.js'
+import { CommandInteraction, DMChannel, Message, MessageEmbed, User } from 'discord.js'
 import { Command, commandMap } from '../command.js'
 import { prefix } from '../index.js'
 import { disabled } from '../disabled.js'
@@ -30,7 +30,7 @@ function helpMenuEmbed (author: User | null): MessageEmbed {
 }
 
 async function help (cmd: string, msg: Message | CommandInteraction): Promise<void> {
-  if (disabled.includes(msg.channel?.id ?? '')) {
+  if (disabled.includes(msg instanceof Message ? msg.channel.id : msg.channelID) && !(msg.channel instanceof DMChannel)) {
     await sendMessage(msg, 'Sorry, that command is disabled in this channel.', true)
   } else {
     await sendMessage(msg, helpMenuEmbed(msg instanceof CommandInteraction ? msg.user : msg.author), true)

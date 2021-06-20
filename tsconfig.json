@@ -9,7 +9,8 @@
     "outDir": "dist",
     "moduleResolution": "Node",
     "strictNullChecks": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/*.ts"],
   "exclude": ["node_modules"],

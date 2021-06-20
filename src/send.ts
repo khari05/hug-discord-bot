@@ -1,10 +1,10 @@
-import { CommandInteraction, Message } from 'discord.js'
+import { CommandInteraction, Message, MessageEmbed } from 'discord.js'
 
-export async function sendMessage (input: Message | CommandInteraction, reply, ephemeral: boolean): Promise<void> {
+export async function sendMessage (input: Message | CommandInteraction, reply: any, ephemeral: boolean): Promise<void> {
   if (input instanceof Message) {
     await input.channel.send(reply)
   } else if (input instanceof CommandInteraction) {
-    await input.reply(reply, { ephemeral: ephemeral })
+    await input.reply({ content: (typeof reply === 'string') ? reply : undefined, embeds: (reply instanceof MessageEmbed) ? [reply] : undefined, ephemeral: ephemeral })
   }
 }
 

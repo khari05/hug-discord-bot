@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/khari05/hug-discord-bot#readme",
   "dependencies": {
+    "@discordjs/voice": "^0.5.0",
     "@types/node": "^14.14.31",
     "axios": "^0.21.1",
     "discord.js": "^13.0.0-dev.807ea2d3c197c7c6556bd1c894114932f6657d49",
