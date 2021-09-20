@@ -1,6 +1,7 @@
 import { Client, Intents, Interaction, Message } from 'discord.js'
 import { matchCommand, matchSlashCommand, setCommands } from './command.js'
 import { fillLinks } from './commands/actions.js'
+import { updatePresence } from './presence.js'
 
 const client: Client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] })
 
@@ -9,8 +10,8 @@ export const prefix: string = process.env.PREFIX ?? '!'
 const commandRegex: RegExp = new RegExp(`^\\${prefix}.*`)
 
 client.on('ready', () => {
-  console.log(`successfully logged in as ${client?.user?.tag ?? 'error'}`)
-  client.user?.setPresence({ activities: [{ name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' }] })
+  console.log(`successfully logged in as ${client?.user?.tag ?? ''}`)
+  updatePresence(client, prefix)
   setCommands(client)
     .catch((e: Error) => console.error(e.stack))
   fillLinks()
@@ -18,11 +19,11 @@ client.on('ready', () => {
 })
 
 client.on('guildCreate', (guild) => {
-  client.user?.setPresence({ activities: [{ name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' }] })
+  updatePresence(client, prefix)
 })
 
 client.on('guildDelete', (guild) => {
-  client.user?.setPresence({ activities: [{ name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' }] })
+  updatePresence(client, prefix)
 })
 
 client.on('messageCreate', (msg: Message) => {

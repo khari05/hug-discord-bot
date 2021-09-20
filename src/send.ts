@@ -1,10 +1,23 @@
 import { CommandInteraction, Message, MessageEmbed } from 'discord.js'
 
-export async function sendMessage (input: Message | CommandInteraction, reply: any, ephemeral: boolean): Promise<void> {
+/**
+ * a function to consolidate sending messages and replying to interactions.
+ * @param input the original message or command interaction that called the parent function
+ * @param reply the output that is about to be sent to the channel
+ * @param ephemeral if the input is a command, does the bot reply with a dismissable message
+ */
+export async function sendMessage (input: Message | CommandInteraction, reply: string | MessageEmbed, ephemeral: boolean): Promise<void> {
   if (input instanceof Message) {
-    await input.channel.send({ content: (typeof reply === 'string') ? reply : undefined, embeds: (reply instanceof MessageEmbed) ? [reply] : undefined })
+    await input.channel.send({
+      content: (typeof reply === 'string') ? reply : undefined,
+      embeds: (reply instanceof MessageEmbed) ? [reply] : undefined
+    })
   } else if (input instanceof CommandInteraction) {
-    await input.reply({ content: (typeof reply === 'string') ? reply : undefined, embeds: (reply instanceof MessageEmbed) ? [reply] : undefined, ephemeral: ephemeral })
+    await input.reply({
+      content: (typeof reply === 'string') ? reply : undefined,
+      embeds: (reply instanceof MessageEmbed) ? [reply] : undefined,
+      ephemeral: ephemeral
+    })
   }
 }
 

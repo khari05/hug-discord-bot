@@ -86,11 +86,14 @@ async function action (cmd: string, msg: Message | CommandInteraction): Promise<
       if (action.type === ActionType.multiUser) {
         if (msg instanceof Message) {
           const mention = msg.content.match(/<@!?\d+>+?/g)
+
+          // one or more users are mentioned
           if (mention !== null) {
             const mentionIds: string[] = mention.map((a: string) => {
               const match = a.match(/\d+/)
               return match !== null ? match[0] : ''
             })
+
             if (mention.length === 1 && msg.author.id !== mentionIds[0]) {
               person2 = `<@${mentionIds[0]}>`
             } else if (mention.length === 2) {
@@ -98,11 +101,17 @@ async function action (cmd: string, msg: Message | CommandInteraction): Promise<
             } else if (mention.length > 2) {
               person2 = 'multiple people'
             }
+
+          // the message is replying to another message with mention set to true
           } else if (msg.mentions.users.size === 1) {
             person2 = `<@${msg.mentions.users.first()?.id ?? ''}>`
+
+          // the message mentions the server instead of a person
           } else if (msg.content.match(/^.\w+\s(@everyone|@here)/) !== null) {
             person2 = 'the entire server'
           }
+
+        // the message is a slash command
         } else {
           person2 = `<@${msg.options.data[0].user?.id ?? ''}>`
         }
