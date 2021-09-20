@@ -1,15 +1,11 @@
 name: CI
 
 on:
-  push:
-    branches: 
-      - master
-  pull_request:
-    branches: 
-      - master
+  - push
+  - pull_request
 
 jobs:
-  lint:
+  checks:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,5 +13,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm ci
-      - run: npm run lint
+      - name: Install Dependencies
+        run: npm ci
+      - name: Check Dependencies
+        run: npm audit
+      - name: Lint Project
+        run: npm run lint
+      - name: Build with Typescript
+        run: npm run build
