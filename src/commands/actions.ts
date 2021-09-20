@@ -104,7 +104,7 @@ async function action (cmd: string, msg: Message | CommandInteraction): Promise<
             person2 = 'the entire server'
           }
         } else {
-          person2 = `<@${msg.options.first()?.user?.id ?? ''}>`
+          person2 = `<@${msg.options.data[0].user?.id ?? ''}>`
         }
       }
 
