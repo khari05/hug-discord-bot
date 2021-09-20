@@ -1,5 +1,5 @@
-import { Client } from "discord.js";
+import { Client } from 'discord.js'
 
-export async function updatePresence (client: Client, prefix: string) {
+export function updatePresence (client: Client, prefix: string): void {
   client.user?.setPresence({ activities: [{ name: `${client.guilds.cache.size} guilds | ${prefix}help`, type: 'WATCHING' }] })
 }
