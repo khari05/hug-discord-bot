@@ -8,4 +8,5 @@ services:
       - .:/app
       - /app/dist
       - /app/node_modules
+      - ./data:/app/data
     restart: unless-stopped

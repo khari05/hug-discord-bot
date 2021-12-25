@@ -2,9 +2,11 @@ name: Push to GH Container Registry
 
 on:
   workflow_run:
-    workflows: ["CI"]
-    branches: [master]
-    types: 
+    workflows:
+      - CI
+    branches: 
+      - master
+    types:
       - completed
 
 env:
