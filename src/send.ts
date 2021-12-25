@@ -7,17 +7,15 @@ import { CommandInteraction, Message, MessageEmbed } from 'discord.js'
  * @param ephemeral if the input is a command, does the bot reply with a dismissable message
  */
 export async function sendMessage (input: Message | CommandInteraction, reply: string | MessageEmbed, ephemeral: boolean): Promise<void> {
+  const message = {
+    content: (typeof reply === 'string') ? reply : undefined,
+    embeds: (reply instanceof MessageEmbed) ? [reply] : undefined
+  }
+
   if (input instanceof Message) {
-    await input.channel.send({
-      content: (typeof reply === 'string') ? reply : undefined,
-      embeds: (reply instanceof MessageEmbed) ? [reply] : undefined
-    })
+    await input.channel.send(message)
   } else if (input instanceof CommandInteraction) {
-    await input.reply({
-      content: (typeof reply === 'string') ? reply : undefined,
-      embeds: (reply instanceof MessageEmbed) ? [reply] : undefined,
-      ephemeral: ephemeral
-    })
+    await input.reply({ ...message, ephemeral: ephemeral })
   }
 }
 

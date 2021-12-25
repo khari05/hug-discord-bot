@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs'
 
-const fileLocation: string = '/app/disabled.txt'
+const fileLocation: string = '/app/data/disabled.txt'
 export const disabled = readFileSync(fileLocation).toString().split('\n')
 
 export function removeChannel (id: string): void {

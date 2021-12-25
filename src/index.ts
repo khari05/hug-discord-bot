@@ -1,9 +1,9 @@
-import { Client, Intents, Interaction, Message } from 'discord.js'
+import { Client, Interaction, Message } from 'discord.js'
 import { matchCommand, matchSlashCommand, setCommands } from './command.js'
 import { fillLinks } from './commands/actions.js'
 import { updatePresence } from './presence.js'
 
-const client: Client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES] })
+const client: Client = new Client({ intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'] })
 
 const token: string | undefined = process.env.TOKEN
 export const prefix: string = process.env.PREFIX ?? '!'
