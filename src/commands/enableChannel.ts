@@ -1,7 +1,7 @@
 import { CommandInteraction, GuildMember, Message } from 'discord.js'
-import { Command } from '../command.js'
-import { disabled, removeChannel } from '../disabled.js'
-import { sendMessage } from '../send.js'
+import { Command } from '../command'
+import { disabled, removeChannel } from '../disabled'
+import { sendMessage } from '../send'
 
 export const enableChannelCommand: Command = {
   name: 'enablechannel',

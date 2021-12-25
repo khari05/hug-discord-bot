@@ -1,16 +1,16 @@
-import { ApplicationCommand, ApplicationCommandOption, Client, CommandInteraction, Message } from 'discord.js'
-import { actionMap } from './commands/actions.js'
-import { disableChannelCommand } from './commands/disableChannel.js'
-import { enableChannelCommand } from './commands/enableChannel.js'
-import { helpCommand } from './commands/help.js'
-import { inviteCommand } from './commands/invite.js'
+import { ApplicationCommand, ApplicationCommandOptionData, Client, CommandInteraction, Message } from 'discord.js'
+import { actionMap } from './commands/actions'
+import { disableChannelCommand } from './commands/disableChannel'
+import { enableChannelCommand } from './commands/enableChannel'
+import { helpCommand } from './commands/help'
+import { inviteCommand } from './commands/invite'
 
 const commandMatcher: RegExp = /^.([a-z]+)\s*?.*/
 
 export interface Command {
   name: string
   description: string
-  options: ApplicationCommandOption[]
+  options: ApplicationCommandOptionData[]
   cmd: (cmd: string, msg: Message | CommandInteraction, client: Client) => Promise<void>
 }
 

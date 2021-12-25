@@ -1,7 +1,7 @@
 import { Client, Interaction, Message } from 'discord.js'
-import { matchCommand, matchSlashCommand, setCommands } from './command.js'
-import { fillLinks } from './commands/actions.js'
-import { updatePresence } from './presence.js'
+import { matchCommand, matchSlashCommand, setCommands } from './command'
+import { fillLinks } from './commands/actions'
+import { updatePresence } from './presence'
 
 const client: Client = new Client({ intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'] })
 
@@ -32,7 +32,7 @@ client.on('messageCreate', (msg: Message) => {
   }
 })
 
-client.on('interaction', (interaction: Interaction) => {
+client.on('interactionCreate', (interaction: Interaction) => {
   if (interaction.isCommand()) {
     matchSlashCommand(interaction, client).catch((e: Error) => console.error(e.stack))
   }

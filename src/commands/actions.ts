@@ -1,8 +1,8 @@
-import { ApplicationCommandOption, CommandInteraction, Message } from 'discord.js'
+import { ApplicationCommandOptionData, CommandInteraction, Message } from 'discord.js'
 import axios, { AxiosResponse } from 'axios'
-import { Command } from '../command.js'
-import { disabled } from '../disabled.js'
-import { sendGif, sendMessage } from '../send.js'
+import { Command } from '../command'
+import { disabled } from '../disabled'
+import { sendGif, sendMessage } from '../send'
 
 const tenorApiKey: string | undefined = process.env.TENOR_KEY
 
@@ -27,7 +27,7 @@ enum ActionType {
   multiUser
 }
 
-const actionOptions: ApplicationCommandOption[] = [{ name: 'user', description: 'The other person for your action', required: true, type: 'USER' }]
+const actionOptions: ApplicationCommandOptionData[] = [{ name: 'user', description: 'The other person for your action', required: true, type: 'USER' }]
 
 export const actionMap: Map<string, Action> = new Map([
   ['hug', {

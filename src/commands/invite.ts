@@ -1,6 +1,6 @@
 import { Client, CommandInteraction, Message } from 'discord.js'
-import { Command } from '../command.js'
-import { sendMessage } from '../send.js'
+import { Command } from '../command'
+import { sendMessage } from '../send'
 
 export const inviteCommand: Command = {
   name: 'invite',

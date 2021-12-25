@@ -1,8 +1,8 @@
 import { CommandInteraction, DMChannel, Message, MessageEmbed, User } from 'discord.js'
-import { Command, commandMap } from '../command.js'
-import { prefix } from '../index.js'
-import { disabled } from '../disabled.js'
-import { sendMessage } from '../send.js'
+import { Command, commandMap } from '../command'
+import { prefix } from '../index'
+import { disabled } from '../disabled'
+import { sendMessage } from '../send'
 
 export const helpCommand: Command = {
   name: 'help',
