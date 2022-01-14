@@ -13,6 +13,7 @@ updates:
       - dependency-name: "*"
         update-types:
           - "version-update:semver-minor"
+          - "version-update:semver-major"
 
   # Enable version updates for Docker
   - package-ecosystem: "docker"
